@@ -8,6 +8,11 @@ import chvector.transforms.chv as chv
 from chvector.filters.filters import log_gabor_spectrum
 from chvector.models.archetypes import *
 from chvector.models.solver import *
+import chvector.models.weights as weights
+
+import skimage as sk
+from skimage.filters.rank import median
+from skimage.morphology import disk
 
 # Input
 # Number of RT orders
@@ -22,14 +27,13 @@ im = skcolor.rgb2gray(skio.imread("COB3-orig.png"))
 #im = skcolor.rgb2gray(skio.imread("monocircle512.tiff"))
 skio.imshow(im)
 plt.show()
-plt.pause(0)
 
 # Create circular harmonic vector
 gf = log_gabor_spectrum(im.shape, wavelength, sigma)
 ch = chv.img_chv(im, gf, N)
 
 # Create model wavelets (needs proper weighting)
-U = sinusoid_pair(N)
+U = sinusoid_pair(N, weights=weights.sinusoid(N,0,0))
 
 # Create response polynomials
 poly, lamb, delt = create_poly(ch, U)
@@ -62,11 +66,14 @@ plt.pause(0)
 
 skio.imshow(Ar)
 plt.show()
-plt.pause(0)
-skio.imshow(phi2)
+
+fig = plt.figure(figsize=(40, 10))
+plt.imshow(phi2, cmap=cc.cm.cyclic_mrybm_35_75_c68_s25)
 plt.show()
-plt.pause(0)
-plt.imshow(th2)
-plt.set_cmap(cc.cm.cyclic_mrybm_35_75_c68_s25)
+
+plt.imshow(th2, cmap=cc.cm.cyclic_mrybm_35_75_c68_s25)
 plt.show()
-plt.pause(0)
+
+th2_mean = median(sk.util.img_as_ubyte(th2 / (np.pi/2)), disk(20))
+plt.imshow(th2_mean, cmap=cc.cm.cyclic_mrybm_35_75_c68_s25)
+plt.show()

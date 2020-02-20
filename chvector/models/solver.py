@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.ndimage as nd
-from numba import jit
+# from numba import jit
 
 
 def create_poly(chv, U):
