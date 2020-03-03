@@ -48,15 +48,17 @@ def sinusoid(N, width, mode):
     dn = x - y
 
     # Solve for window
-    V = 2*np.sin(width*dn/2) / dn
+    V = 2 * np.sin(width*dn/2) / dn
     V[np.isnan(V)] = 0
-    V = V + 2*width * np.eye(2*N+1)
+    V = V + 2 * width * np.eye(2*N+1)
     V[np.mod(dn,2) == 1] = 0
 
     # Calculate eigenvectors
     [eigenvalues, eigenvectors] = np.linalg.eig(V)
+    idx = np.argsort(eigenvalues)
+    eigenvectors = eigenvectors[:, idx[-2:]]
 
     # Last two are the odd and even weighted sinusoidal CH vectors. Use their absolute values to get the weights.
-    weights = np.sum(np.abs(eigenvectors[:, 0:2]) / np.sqrt(2), axis=1).transpose()
+    weights = np.sum(np.abs(eigenvectors) / np.sqrt(2), axis=1).transpose()
 
     return weights

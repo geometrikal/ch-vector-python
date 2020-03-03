@@ -3,8 +3,11 @@ import chvector.transforms.fft as fft
 import chvector.transforms.ops as ops
 
 
-def img_chv(im, basis_filter_spectrum, N):
+def img_chv(im, basis_filter_spectrum, N, weights=None):
     assert np.ndim(im) == 2, "Image should only have 2 dimensions (greyscale)"
+
+    if weights is None:
+        weights = np.ones(2*N+1)
 
     # FFT of image
     f = fft.img_fft2(im)
@@ -16,7 +19,7 @@ def img_chv(im, basis_filter_spectrum, N):
     # Calculate each order
     for n in range(-N, N+1):
         t = rt_spectrum(f.shape, n)
-        ch[:, :, n + N] = fft.img_ifft2(f * t)
+        ch[:, :, n + N] = fft.img_ifft2(f * t) * weights[n + N]
     return ch
 
 

@@ -1,4 +1,5 @@
 import numpy as np
+import multiprocessing as mp
 import scipy.ndimage as nd
 # from numba import jit
 
@@ -32,26 +33,30 @@ def create_poly(chv, U):
 
 def conv_3rd_dim(A, B):
     res = np.zeros((A.shape[0], A.shape[1], A.shape[2]*2-1), dtype=np.complex)
+    print("Convolve along 3rd dimension...")
     for i in range(A.shape[0]):
-        print(i)
+        print("\r - row {} / {}".format(i+1, A.shape[0]), end="")
         for j in range(A.shape[1]):
             v1 = A[i,j,:].flatten()
             v2 = B[i,j,:].flatten()
             v3 = np.convolve(v1,v2)
             res[i, j, :] = v3
+    print()
     return res
 
 
-def poly_roots(A):
+def poly_roots(A, parallel=False):
+    print("Solving polynomial roots...")
     roots = np.zeros((A.shape[0], A.shape[1], A.shape[2]-1), dtype=np.complex)
     k = np.arange(-(A.shape[2] - A.shape[2] // 2 - 1), A.shape[2] // 2 + 1)
     k = k[np.newaxis, np.newaxis, :]
     A = A * k
     for i in range(A.shape[0]):
-        print(i)
+        print("\r - row {} / {}".format(i+1, A.shape[0]), end="")
         for j in range(A.shape[1]):
             p = A[i, j, :].flatten()
             roots[i, j, :] = np.roots(p)
+    print()
     return roots
 
 
