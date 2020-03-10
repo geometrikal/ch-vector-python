@@ -29,3 +29,23 @@ def parallel_apply_along_axis(func1d, axis, arr, *args, **kwargs):
 
 def unpacking_apply_along_axis(all_args):
     (func1d, axis, arr, args, kwargs) = all_args
+    return np.apply_along_axis(func1d, axis, arr, *args, **kwargs)
+
+
+def parallel_chunked(func, arr):
+    """
+    Splits an operation into parallel chunks along first axis
+    :param func: Function to apply to each chunk, takes single argument
+    :param arr: The array to process
+    :return:
+    """
+    # Chunks for the mapping (only a few chunks):
+    chunks = np.array_split(arr, multiprocessing.cpu_count())
+    # Pool
+    pool = multiprocessing.Pool()
+    individual_results = pool.map(func, chunks)
+    # Freeing the workers:
+    pool.close()
+    pool.join()
+
+    return np.concatenate(individual_results)
