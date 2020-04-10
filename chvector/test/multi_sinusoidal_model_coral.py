@@ -6,6 +6,8 @@ import skimage.util as skutil
 import matplotlib.pyplot as plt
 import chvector.utils.plotting as pl
 
+import os
+
 import scipy.ndimage as ndi
 import colorcet as cc
 
@@ -103,25 +105,29 @@ def noise_fill(imo, threshold, sigma):
     # Fill noise
     mask = imo < threshold
     mask = ndi.binary_fill_holes(mask)
-    mask = skmph.binary_erosion(mask, skmph.disk(11))
+    mask = skmph.binary_erosion(mask, skmph.disk(sigma*2))
     mn = np.mean(imo[mask])
     st = np.std(imo[mask])
-    mask = ndi.gaussian_filter(mask.astype(float), 5)
+    mask = ndi.gaussian_filter(mask.astype(float), sigma)
     pl.plot_image(mask)
 
     ns = skutil.noise.random_noise(np.zeros(imo.shape), mean=0, var=st ** 2)
     im = (ns + im_filled) * (1 - mask) + imo * mask
+    return im
 
 
 if __name__ == '__main__':
 
+    os.makedirs('output', exist_ok=True)
+
+
     # Load image
     imo = skcolor.rgb2gray(skio.imread("cafewall.png"))
     imo = skcolor.rgb2gray(skio.imread("COB3-orig.png"))
-    pl.plot_image(imo)
+    pl.plot_image(imo, save="output/orig.png")
 
-
-    pl.plot_image(im)
+    im = noise_fill(imo, 0.9, 5)
+    pl.plot_image(im, save="output/noise.png")
 
     # Calculate CH vector
     # Number of RT orders
@@ -174,6 +180,7 @@ if __name__ == '__main__':
     #
     # print(s0)
     # print(s1)
+
 
 
 
@@ -231,31 +238,28 @@ if __name__ == '__main__':
         # pl.plot_phase(phi_model[:, :, i])
         # pl.plot_angle(theta_model[:, :, i])
         #
-        Achv = np.linalg.norm(ch[i], axis=2)
-        Achm = np.linalg.norm(ch_model[i], axis=2)
-        Ares = np.linalg.norm(ch_residual[i], axis=2)
-        Achm2 = np.linalg.norm(ch_model_2[i], axis=2)
-        Ares2 = np.linalg.norm(ch_residual_2[i], axis=2)
-
-        pl.plot_image(Achv)
-        pl.plot_image(Achm)
-        pl.plot_image(Ares)
-        pl.plot_image(Achm2)
-        pl.plot_image(Ares2)
+        # Achv = np.linalg.norm(ch[i], axis=2)
+        # Achm = np.linalg.norm(ch_model[i], axis=2)
+        # Ares = np.linalg.norm(ch_residual[i], axis=2)
+        # Achm2 = np.linalg.norm(ch_model_2[i], axis=2)
+        # Ares2 = np.linalg.norm(ch_residual_2[i], axis=2)
+        #
+        # pl.plot_image(Achv)
+        # pl.plot_image(Achm)
+        # pl.plot_image(Ares)
+        # pl.plot_image(Achm2)
+        # pl.plot_image(Ares2)
         #
         # pl.plot_image(s[0])
         # pl.plot_image(s[1])
-        pl.plot_image(A_model[i])
-        pl.plot_phase(phi_model[i])
-        pl.plot_angle(theta_model[i])
+        pl.plot_image(A_model[i], save="output/A_{}_1.png".format(i))
+        pl.plot_phase(phi_model[i], save="output/phi_{}_1.png".format(i))
+        pl.plot_angle(theta_model[i], save="output/theta_{}_1.png".format(i))
 
-        th2 = circ.median_2d(theta_model[i], 2)
-        pl.plot_angle(th2)
+        pl.plot_image(A_model_2[i], save="output/A_{}_2.png".format(i))
+        pl.plot_phase(phi_model_2[i], save="output/phi_{}_2.png".format(i))
+        pl.plot_angle(theta_model_2[i], save="output/theta_{}_2.png".format(i))
 
-        pl.plot_image(A_model_2[i])
-        pl.plot_phase(phi_model_2[i])
-        pl.plot_angle(theta_model_2[i])
-
-        pl.plot_amp_angle(A_model[i], theta_model[i])
-        pl.plot_amp_angle(A_model_2[i], theta_model_2[i])
+        pl.plot_amp_angle(A_model[i], theta_model[i], save="output/Atheta_{}_1.png".format(i))
+        pl.plot_amp_angle(A_model_2[i], theta_model_2[i], save="output/Atheta_{}_2.png".format(i))
 
