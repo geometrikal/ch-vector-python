@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def sinusoid(N, width, mode):
+def sinusoid(N, width=0, mode=1):
     # %CHWEIGHTSSINUSOID - Weighting matrix for sinusoidal model that ensures odd
     # %                    and even components are weighted equally.
     # %
@@ -38,20 +38,20 @@ def sinusoid(N, width, mode):
 
     # Use normalisation?
     if mode == 1:
-        width = width * 5.64/N - 6.57/N^2
+        width = width * 5.64 / N - 6.57 / N ** 2
 
     # Width cannot be zero
     if width == 0:
         width = 0.00001
 
-    [x,y] = np.meshgrid(np.arange(-N,N+1), np.arange(-N,N+1))
+    [x, y] = np.meshgrid(np.arange(-N, N + 1), np.arange(-N, N + 1))
     dn = x - y
 
     # Solve for window
-    V = 2 * np.sin(width*dn/2) / dn
+    V = 2 * np.sin(width * dn / 2) / dn
     V[np.isnan(V)] = 0
-    V = V + 2 * width * np.eye(2*N+1)
-    V[np.mod(dn,2) == 1] = 0
+    V = V + 2 * width * np.eye(2 * N + 1)
+    V[np.mod(dn, 2) == 1] = 0
 
     # Calculate eigenvectors
     [eigenvalues, eigenvectors] = np.linalg.eig(V)

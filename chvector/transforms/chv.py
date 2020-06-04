@@ -1,10 +1,19 @@
 import numpy as np
 import chvector.transforms.fft as fft
 import chvector.transforms.ops as ops
+import chvector.models.weights as chw
 
 
-def img_chv(im, basis_filter_spectrum, N, weights=None):
-    assert np.ndim(im) == 2, "Image should only have 2 dimensions (greyscale)"
+def img_chv(im, basis_filter_spectrum, N, weights='sinusoid'):
+
+    if isinstance(weights, str) and weights == 'sinusoid':
+        weights = chw.sinusoid(N)
+
+    if np.ndim(im) > 2 and im.shape[2] > 1:
+        r = np.zeros(im.shape + (2*N+1,), dtype=np.complex)
+        for i in range(im.shape[2]):
+            r[..., i, :] = img_chv(im[..., i], basis_filter_spectrum, N, weights)
+        return r
 
     if weights is None:
         weights = np.ones(2*N+1)
@@ -24,7 +33,6 @@ def img_chv(im, basis_filter_spectrum, N, weights=None):
 
 
 def rt_spectrum(shape, n):
-
     if n == 0:
         return np.ones(shape)
 
