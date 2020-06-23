@@ -14,16 +14,13 @@ def delta_angle(alpha, beta):
     Difference (alpha - beta) around the circle. Input angles do not need to
     be normalized in a given angle interval. Output is in (-pi,pi)
     """
-
     delta = np.angle(np.exp(1j * alpha) / np.exp(1j * beta))
-
     # for some values, e.g. alpha = beta = 0.49856791, the ratio of the complex numbers is very close to 0 but not zero...!
     if np.ndim(alpha) == 0 and np.ndim(beta) == 0:
         if alpha == beta:
             delta = 0.
     else:
         delta[alpha == beta] = 0.
-
     return delta
 
 
@@ -36,14 +33,10 @@ def circmedian(alpha):
     on finding the diameter that splits the point distribution in two (50% of
     points on each side). The side of the diameter closest to the mean of the
     data is returned.
-
     Output in (-pi,pi)
-
     See https://hci.iwr.uni-heidelberg.de/sites/default/files/profiles/mstorath/files/storath2017fast.pdf
     for arc distance median vs bisecting median
-
     """
-
     # Checks
     if alpha.ndim > 1:
         raise Exception('circmedian only handles 1D arrays')

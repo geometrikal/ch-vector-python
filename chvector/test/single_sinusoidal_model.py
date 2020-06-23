@@ -145,9 +145,12 @@ if __name__ == '__main__':
         A_model[:, :, i] = np.sqrt(s0 ** 2 + s1 ** 2)[:, :, 0]
         phi_model[:, :, i] = np.arctan2(s1, s0)[:, :, 0]
         theta_model[:, :, i] = th_max[:, :, 0]
-
+        # Plots
         pl.plot_image(s0[:,:,0])
         pl.plot_image(s1[:,:,0])
         pl.plot_image(A_model[:, :, i])
         pl.plot_phase(phi_model[:, :, i])
         pl.plot_angle(theta_model[:, :, i])
+
+
+    # Region growing

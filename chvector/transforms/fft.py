@@ -1,6 +1,5 @@
 import numpy as np
-from scipy.fftpack import *
-
+from scipy.fftpack import fft2, ifft2
 
 def fft_mesh(shape):
     rows = shape[0]

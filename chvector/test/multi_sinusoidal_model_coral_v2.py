@@ -159,6 +159,9 @@ if __name__ == '__main__':
     # Model vectors
     U = sinusoid_pair(N, weightV)
 
+    # R = np.exp(1j*np.arange(-N,N+1)*np.pi/2)
+    # U2 = R * U
+    # U = np.concatenate((U,U2))
     # Test
     # cht = U[1]
     # cht = cht[np.newaxis, np.newaxis, :]
@@ -267,6 +270,8 @@ if __name__ == '__main__':
     import skimage.morphology as morph
     def median_2d(th, radius=2):
         se = morph.disk(radius)
+
+
         return ndi.generic_filter(th, np.median, footprint=se)
 
     th = median_2d(theta_model[0], 11)

@@ -1,7 +1,8 @@
 import numpy as np
-import chvector.transforms.fft as fft
+import chvector.filters.filters as filt
 import chvector.transforms.ops as ops
 import chvector.models.weights as chw
+from scipy.fftpack import ifftshift
 
 
 def img_chv(im, basis_filter_spectrum, N, weights='sinusoid'):
@@ -19,7 +20,7 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid'):
         weights = np.ones(2*N+1)
 
     # FFT of image
-    f = fft.img_fft2(im)
+    f = filt.img_fft2(im)
     f *= basis_filter_spectrum
 
     # CHV placeholder
@@ -28,7 +29,7 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid'):
     # Calculate each order
     for n in range(-N, N+1):
         t = rt_spectrum(f.shape, n)
-        ch[:, :, n + N] = fft.img_ifft2(f * t) * weights[n + N]
+        ch[:, :, n + N] = filt.img_ifft2(f * t) * weights[n + N]
     return ch
 
 
@@ -37,7 +38,7 @@ def rt_spectrum(shape, n):
         return np.ones(shape)
 
     # Get spectrum coordinates
-    ux, uy, _, _ = fft.fft_mesh(shape)
+    ux, uy, _, _ = filt.fft_mesh(shape)
 
     # Calculate RT spectrum
     if n < 0:
