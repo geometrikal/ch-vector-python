@@ -42,7 +42,7 @@ def sinusoid(N, width=0, mode=1):
 
     # Width cannot be zero
     if width == 0:
-        width = 0.00001
+        width = 0.0001
 
     [x, y] = np.meshgrid(np.arange(-N, N + 1), np.arange(-N, N + 1))
     dn = x - y
@@ -53,10 +53,14 @@ def sinusoid(N, width=0, mode=1):
     V = V + 2 * width * np.eye(2 * N + 1)
     V[np.mod(dn, 2) == 1] = 0
 
+    print(np.round(V,2))
+
     # Calculate eigenvectors
-    [eigenvalues, eigenvectors] = np.linalg.eig(V)
+    [eigenvalues, eigenvectors] = np.linalg.eigh(V)
+    print((eigenvectors/ np.sqrt(2)).round(2).transpose())
+    print(eigenvalues.round(2))
     idx = np.argsort(eigenvalues)
-    eigenvectors = eigenvectors[:, idx[-2:]]
+    eigenvectors = eigenvectors[:, idx[:2]]
 
     # Last two are the odd and even weighted sinusoidal CH vectors. Use their absolute values to get the weights.
     weights = np.sum(np.abs(eigenvectors) / np.sqrt(2), axis=1).transpose()
