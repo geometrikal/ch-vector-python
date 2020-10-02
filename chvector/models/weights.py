@@ -53,12 +53,12 @@ def sinusoid(N, width=0, mode=1):
     V = V + 2 * width * np.eye(2 * N + 1)
     V[np.mod(dn, 2) == 1] = 0
 
-    print(np.round(V,2))
+    # print(np.round(V,2))
 
     # Calculate eigenvectors
     [eigenvalues, eigenvectors] = np.linalg.eigh(V)
-    print((eigenvectors/ np.sqrt(2)).round(2).transpose())
-    print(eigenvalues.round(2))
+    # print((eigenvectors/ np.sqrt(2)).round(2).transpose())
+    # print(eigenvalues.round(2))
     idx = np.argsort(eigenvalues)
     eigenvectors = eigenvectors[:, idx[:2]]
 

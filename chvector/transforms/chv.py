@@ -7,23 +7,25 @@ import tensorflow as tf
 
 
 def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
-
+    # basis_filter_spectrum = np.ones(basis_filter_spectrum.shape)
     print("FT")
     # CH vector weights
     if isinstance(weights, str) and weights == 'sinusoid':
         weights = chw.sinusoid(N)
     if weights is None:
         weights = np.ones(2*N+1) / (2*N+1)
-    print(weights)
+    print("Weights: {}".format(weights))
 
     multichannel = False
     if np.ndim(im) == 3:
         imt = im.transpose([2,0,1])
         basis_filter_spectrum = np.repeat(basis_filter_spectrum[np.newaxis, ...], 3, axis=0)
         multichannel = True
+    else:
+        imt = im
 
     # Get fft of image (unless passed fft directly!)
-    if is_fft:
+    if is_fft is not None:
         f = imt
     else:
         f = tf.signal.fft2d(imt)
@@ -32,13 +34,17 @@ def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     # Calculate each order
     rts = []
     for n in range(-N, N+1):
-        rts.append(rt_spectrum(im.shape[:2], n) * weights[n + N])
+        spectrum = rt_spectrum(im.shape[:2], n) * weights[n + N]
+        rts.append(spectrum)
     rts = np.asarray(rts)
     if multichannel:
         rts = np.repeat(rts[:, np.newaxis, ...], 3, axis=1)
     f = tf.repeat([f], 2 * N + 1, axis=0)
     ts = f * rts
-    ch = tf.signal.ifft2d(ts).numpy().transpose([2,3,1,0])
+    if multichannel:
+        ch = tf.signal.ifft2d(ts).numpy().transpose([2,3,1,0])
+    else:
+        ch = tf.signal.ifft2d(ts).numpy().transpose([1, 2, 0])
     return ch
 
 
@@ -63,6 +69,7 @@ def rt_spectrum(shape, n):
 
 
 def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
+    # basis_filter_spectrum = np.ones(basis_filter_spectrum.shape)
     # CH vector weights
     if isinstance(weights, str) and weights == 'sinusoid':
         weights = chw.sinusoid(N)
@@ -88,8 +95,8 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
 
     # Calculate each order
     for n in range(-N, N+1):
-        t = rt_spectrum(f.shape, n)
-        ch[:, :, n + N] = filt.img_ifft2(f * t) * weights[n + N]
+        t = rt_spectrum(f.shape, n) * weights[n + N]
+        ch[:, :, n + N] = filt.img_ifft2(f * t)
     return ch
 
 
@@ -98,7 +105,7 @@ def rt_spectrum(shape, n):
         return np.ones(shape)
 
     # Get spectrum coordinates
-    ux, uy, _, _ = filt.fft_mesh(shape)
+    ux, uy, r, th = filt.fft_mesh(shape)
 
     # Calculate RT spectrum
     if n < 0:
@@ -106,10 +113,14 @@ def rt_spectrum(shape, n):
         n = -n
     else:
         v = ux + 1j * uy
-    r = np.abs(v)
     ops.dc_to_value(r, 1)
-    v = (v / r) ** n
+    v = np.power(v / r, n)
     ops.dc_to_zero(v)
+    # Fix to set wavelngth 2 parts to zero so that conjugate looks correct
+    if v.shape[0] % 2 == 0:
+        v[v.shape[0] // 2, :] = 0
+    if v.shape[1] % 2 == 0:
+        v[:, v.shape[1] // 2] = 0
     return v
 
 
