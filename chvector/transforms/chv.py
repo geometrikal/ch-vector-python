@@ -2,7 +2,7 @@ import numpy as np
 import chvector.filters.filters as filt
 import chvector.transforms.ops as ops
 import chvector.models.weights as chw
-from scipy.fftpack import ifftshift
+# from scipy.fftpack import ifftshift
 import tensorflow as tf
 
 
@@ -77,11 +77,15 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
         weights = np.ones(2*N+1) / (2*N+1)
 
     # If multi-channel, run on each channel
-    if np.ndim(im) > 2 and im.shape[2] > 1:
-        r = np.zeros(im.shape + (2*N+1,), dtype=np.complex)
-        for i in range(im.shape[2]):
-            r[..., i, :] = img_chv(im[..., i], basis_filter_spectrum, N, weights)
-        return r
+    if np.ndim(im) > 2:
+        if im.shape[2] > 1:
+            r = np.zeros(im.shape + (2*N+1,), dtype=np.complex)
+            for i in range(im.shape[2]):
+                r[..., i, :] = img_chv(im[..., i], basis_filter_spectrum, N, weights)
+            return r
+        else:
+            # Remove last channel dim
+            im = im[:, :, 0]
 
     # Get fft of image (unless passed fft directly!)
     if is_fft:
