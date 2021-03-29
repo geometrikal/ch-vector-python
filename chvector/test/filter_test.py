@@ -1,11 +1,10 @@
-import numpy as np
 import skimage.io as skio
 import skimage.color as skcolor
 import matplotlib.pyplot as plt
 import colorcet as cc
 
 import chvector.transforms.chv as chv
-from chvector.filters.filters import log_gabor_spectrum
+from chvector.filters import log_gabor_spectrum
 from chvector.models.archetypes import *
 from chvector.models.solver import *
 

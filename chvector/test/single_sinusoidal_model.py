@@ -1,20 +1,12 @@
-import numpy as np
 import skimage.io as skio
 import skimage.color as skcolor
-import matplotlib.pyplot as plt
 import chvector.utils.plotting as pl
-import colorcet as cc
 
 import chvector.transforms.chv as chv
-from chvector.filters.filters import log_gabor_spectrum
+from chvector.filters import log_gabor_spectrum
 from chvector.models.archetypes import *
 from chvector.models.solver import *
 import chvector.models.weights as weights
-
-import skimage as sk
-from skimage.filters.rank import median
-from skimage.morphology import disk
-
 
 '''
 Example sinusoidal image model analysis of coral image

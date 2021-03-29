@@ -1,5 +1,4 @@
 from chvector.transforms.fft import *
-from chvector.filters.filters import *
 from chvector.filters.rt import *
 
 import matplotlib.pyplot as plt

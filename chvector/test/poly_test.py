@@ -1,5 +1,3 @@
-import chvector.transforms.chv as chv
-from chvector.filters.filters import log_gabor_spectrum
 from chvector.models.archetypes import *
 from chvector.models.solver import *
 

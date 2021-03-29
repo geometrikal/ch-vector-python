@@ -1,5 +1,5 @@
 import numpy as np
-import chvector.filters.filters as filt
+import chvector.filters as filt
 import chvector.transforms.ops as ops
 import chvector.models.weights as chw
 # from scipy.fftpack import ifftshift
@@ -48,24 +48,24 @@ def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     return ch
 
 
-def rt_spectrum(shape, n):
-    if n == 0:
-        return np.ones(shape)
-
-    # Get spectrum coordinates
-    ux, uy, _, _ = filt.fft_mesh(shape)
-
-    # Calculate RT spectrum
-    if n < 0:
-        v = ux - 1j * uy
-        n = -n
-    else:
-        v = ux + 1j * uy
-    r = np.abs(v)
-    ops.dc_to_value(r, 1)
-    v = (v / r) ** n
-    ops.dc_to_zero(v)
-    return v
+# def rt_spectrum(shape, n):
+#     if n == 0:
+#         return np.ones(shape)
+#
+#     # Get spectrum coordinates
+#     ux, uy, _, _ = filt.fft_mesh(shape)
+#
+#     # Calculate RT spectrum
+#     if n < 0:
+#         v = ux - 1j * uy
+#         n = -n
+#     else:
+#         v = ux + 1j * uy
+#     r = np.abs(v)
+#     ops.dc_to_value(r, 1)
+#     v = (v / r) ** n
+#     ops.dc_to_zero(v)
+#     return v
 
 
 def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
@@ -128,9 +128,13 @@ def rt_spectrum(shape, n):
     return v
 
 
+def chv_norm(chv):
+    return np.linalg.norm(chv, axis=-1)
+
+
 if __name__ == "__main__":
     import time
-    from chvector.filters.filters import log_gabor_spectrum
+    from chvector.filters import log_gabor_spectrum
 
     for gpu in tf.config.experimental.list_physical_devices('GPU'):
         tf.config.experimental.set_memory_growth(gpu, True)

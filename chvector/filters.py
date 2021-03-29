@@ -12,8 +12,8 @@ def fft_mesh(shape):
     ux = ifftshift(ux)
     uy = ifftshift(uy)
     if np.ndim(shape) == 3:
-        ux = np.repeat(ux[:,:,np.newaxis], shape[3], axis=2)
-        uy = np.repeat(uy[:,:,np.newaxis], shape[3], axis=2)
+        ux = np.repeat(ux[:, :, np.newaxis], shape[3], axis=2)
+        uy = np.repeat(uy[:, :, np.newaxis], shape[3], axis=2)
     r = np.sqrt(ux**2 + uy**2)
     th = np.arctan2(uy, ux)
 

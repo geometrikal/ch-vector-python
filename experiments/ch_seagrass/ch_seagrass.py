@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import colorcet as cc
 
 import chvector.transforms.chv as chv
-from chvector.filters.filters import log_gabor_spectrum
-from chvector.models.archetypes import *
+from chvector.filters import log_gabor_spectrum
 from chvector.models.solver import *
 
 filename = "D:\\Datasets\\Seagrass\\SeagrassFramesAll\\Strappy\\8FEB20-DSC02671.JPG"
