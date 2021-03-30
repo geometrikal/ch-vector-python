@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def sinusoid(N, width=0, mode=1):
+def sinusoid_weights(N, width=0, mode=1):
     # %CHWEIGHTSSINUSOID - Weighting matrix for sinusoidal model that ensures odd
     # %                    and even components are weighted equally.
     # %

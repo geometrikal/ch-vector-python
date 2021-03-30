@@ -11,7 +11,7 @@ def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     print("FT")
     # CH vector weights
     if isinstance(weights, str) and weights == 'sinusoid':
-        weights = chw.sinusoid(N)
+        weights = chw.sinusoid_weights(N)
     if weights is None:
         weights = np.ones(2*N+1) / (2*N+1)
     print("Weights: {}".format(weights))
@@ -72,7 +72,7 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     # basis_filter_spectrum = np.ones(basis_filter_spectrum.shape)
     # CH vector weights
     if isinstance(weights, str) and weights == 'sinusoid':
-        weights = chw.sinusoid(N)
+        weights = chw.sinusoid_weights(N)
     if weights is None:
         weights = np.ones(2*N+1) / (2*N+1)
 

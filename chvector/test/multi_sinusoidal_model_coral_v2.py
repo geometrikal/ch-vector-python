@@ -136,7 +136,7 @@ if __name__ == '__main__':
     # Filter bandwidth (sigma)
     sigma = 0.65
     # CH vector weights
-    weightV = weights.sinusoid(N, 0, 0)
+    weightV = weights.sinusoid_weights(N, 0, 0)
     print("Weights are: ")
     print(weightV.transpose())
     # CH vector output array

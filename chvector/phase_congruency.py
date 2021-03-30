@@ -5,29 +5,39 @@ import skimage.color as skc
 from scipy.stats import beta
 
 from chvector.filters import log_gabor_spectrum
+from chvector.models.archetypes import sinusoid_pair
+from chvector.models.solver import create_poly
 from chvector.transforms.chv import img_chv, chv_norm
 import matplotlib.pyplot as plt
 
 
-def phase_congruency(im, N, w, sigma, scales, scale_factor=2):
+def phase_congruency(im, N, w, sigma, scales, scale_factor=2, model=None, model_factor=1):
     plt.matshow(im)
     plt.show()
     if np.ndim(im) > 2:
         im = skc.rgb2gray(im)
     ch = np.zeros(im.shape + (2*N+1, scales), dtype=np.complex)
+
     for i in range(scales):
         spectrum = log_gabor_spectrum(im.shape[:2], w * scale_factor**i, sigma, passband='band')
-        ch[:, :, :, i] = img_chv(im, spectrum, N)
-        plt.matshow(chv_norm(ch[:, :, :, i]))
-        plt.show()
+        ch_i = img_chv(im, spectrum, N)
+        if model is not None:
+            _, ch_i, _ = create_poly(ch_i, model)
+            # print(ch_i[:,400, 400, :])
+            ch_i = ch_i[0] + ch_i[1]
+            # print(ch_i[400,400,:])
+            # ch_i = ch_i[:, :, ::model_factor]
+        ch[:, :, :, i] = ch_i
+        # plt.matshow(chv_norm(ch[:, :, :, i]))
+        # plt.show()
     A1 = np.linalg.norm(np.sum(ch, axis=-1), axis=-1)
     A2 = np.sum(np.linalg.norm(ch, axis=-2).squeeze(), axis=-1)
-    plt.matshow(A1)
-    plt.colorbar()
-    plt.show()
-    plt.matshow(A2)
-    plt.colorbar()
-    plt.show()
+    # plt.matshow(A1)
+    # plt.colorbar()
+    # plt.show()
+    # plt.matshow(A2)
+    # plt.colorbar()
+    # plt.show()
 
     epsilon = 0.01
     plt.matshow(A1 / (A2 + epsilon))
@@ -40,11 +50,27 @@ def phase_congruency(im, N, w, sigma, scales, scale_factor=2):
 
 
 if __name__ == "__main__":
-    im = skio.imread("test/coral.jpg")
-    im = skt.rescale(im, [0.25, 0.25, 1])
+    N = 7
+    w = 4
+    sigma = 0.65
+    scales = 4
+    scale_factor = 2
+
+    im = skio.imread("test/camvid.png")
+    # im = skt.rescale(im, [0.25, 0.25, 1])
     phase_congruency(im,
-                     N=3,
-                     w=4,
-                     sigma=0.65,
-                     scales=4,
-                     scale_factor=2)
+                     N=N,
+                     w=w,
+                     sigma=sigma,
+                     scales=scales,
+                     scale_factor=scale_factor)
+
+    U = sinusoid_pair(N, width=0.1)
+    phase_congruency(im,
+                     N=N,
+                     w=w,
+                     sigma=sigma,
+                     scales=scales,
+                     scale_factor=scale_factor,
+                     model=U,
+                     model_factor=2)

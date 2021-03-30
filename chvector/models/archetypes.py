@@ -1,5 +1,7 @@
 import numpy as np
 
+from chvector.models.weights import sinusoid_weights
+
 
 def sinusoid(A, phi, theta, N, weights=None):
     vec = np.zeros([2*N+1], dtype=np.complex)
@@ -16,7 +18,9 @@ def sinusoid(A, phi, theta, N, weights=None):
     return vec
 
 
-def sinusoid_pair(N, weights=None):
+def sinusoid_pair(N, weights=None, width=None):
+    if weights is None and width is not None:
+        weights = sinusoid_weights(N, width)
     mat = np.zeros([2, 2 * N + 1], dtype=np.complex)
     mat[0] = sinusoid(1, 0, 0, N, weights)
     mat[1] = sinusoid(1, np.pi/2, 0, N, weights)
