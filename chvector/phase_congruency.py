@@ -24,7 +24,7 @@ def phase_congruency(im, N, w, sigma, scales, scale_factor=2, model=None, model_
         if model is not None:
             _, ch_i, _ = create_poly(ch_i, model)
             # print(ch_i[:,400, 400, :])
-            ch_i = ch_i[0] + ch_i[1]
+            ch_i = ch_i[0] + 1j * ch_i[1]
             # print(ch_i[400,400,:])
             # ch_i = ch_i[:, :, ::model_factor]
         ch[:, :, :, i] = ch_i
