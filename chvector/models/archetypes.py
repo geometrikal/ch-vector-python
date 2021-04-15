@@ -1,9 +1,12 @@
 import numpy as np
+import chvector.models.weights as chw
 
 from chvector.models.weights import sinusoid_weights
 
 
 def sinusoid(A, phi, theta, N, weights=None):
+    if weights is None:
+        weights = chw.sinusoid(N)
     vec = np.zeros([2*N+1], dtype=np.complex)
     for n in range(-N,N+1):
         idx = n+N

@@ -48,6 +48,8 @@ def phase_congruency(im, N, w, sigma, scales, scale_factor=2, model=None, model_
     plt.colorbar()
     plt.show()
 
+    return A1 / (A2 + epsilon)
+
 
 if __name__ == "__main__":
     N = 7
