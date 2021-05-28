@@ -19,7 +19,7 @@ def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     multichannel = False
     if np.ndim(im) == 3:
         imt = im.transpose([2,0,1])
-        basis_filter_spectrum = np.repeat(basis_filter_spectrum[np.newaxis, ...], 3, axis=0)
+        basis_filter_spectrum = np.repeat(basis_filter_spectrum[np.newaxis, ...], im.shape[-1], axis=0)
         multichannel = True
     else:
         imt = im
@@ -38,7 +38,7 @@ def tf_img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
         rts.append(spectrum)
     rts = np.asarray(rts)
     if multichannel:
-        rts = np.repeat(rts[:, np.newaxis, ...], 3, axis=1)
+        rts = np.repeat(rts[:, np.newaxis, ...], im.shape[-1], axis=1)
     f = tf.repeat([f], 2 * N + 1, axis=0)
     ts = f * rts
     if multichannel:
