@@ -41,8 +41,45 @@ def log_gabor_spectrum(shape, wavelength, sigma, passband='band'):
     return s
 
 
+def scale_adaptive_spectrums(shape, cutoff, N):
+    _, _, f, _ = fft_mesh(shape)
+    w = 2 * np.pi * f  # convert to radians
+    w_c = np.pi / cutoff
+    r_c = np.log2(w_c / 2)
+    r_w = np.log2(np.sqrt(2) * np.pi) - r_c
+    r = np.pi * (np.log2(w) - r_c) / r_w
+    h_w = np.cos(np.pi/2 * np.log2(w / w_c))
+    h_w[w <= w_c/2] = 0
+    h_w[w > w_c] = 1
+    h = np.zeros(shape + (N+1, 2))
+    for n in range(N+1):
+        h[:, :, n, 0] = h_w * np.cos(n * r)
+        h[:, :, n, 1] = h_w * np.sin(n * r)
+    return h
+
+
 def apply_filter(im, f):
     return img_ifft2(img_fft2(im) * f)
+
+
+if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+
+    shape = (256,256)
+    cutoff = 32
+    N = 6
+
+    h = scale_adaptive_spectrums(shape, cutoff, N)
+
+    for i in range(h.shape[2]):
+        h_all = np.linalg.norm(h[:,:,i,:], axis=-1)
+        pair = np.hstack((h[:,:,i,0], h[:,:,i,1], h_all))
+        # plt.matshow(pair)
+        # plt.show()
+        plt.plot(pair[0, :128])
+        plt.plot(pair[0, 256:256+128])
+        plt.show()
+
 
 
 
