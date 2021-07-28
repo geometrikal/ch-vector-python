@@ -2,6 +2,9 @@ import chvector.transforms.ops as ops
 import numpy as np
 from scipy.fftpack import fft2, ifft2, ifftshift
 
+from chvector.transforms.chv import img_chv
+
+
 def fft_mesh(shape):
     rows = shape[0]
     cols = shape[1]
@@ -51,10 +54,14 @@ def scale_adaptive_spectrums(shape, cutoff, N):
     h_w = np.cos(np.pi/2 * np.log2(w / w_c))
     h_w[w <= w_c/2] = 0
     h_w[w > w_c] = 1
-    h = np.zeros(shape + (N+1, 2))
+    h = np.zeros(shape + (2*N+1, ))
     for n in range(N+1):
-        h[:, :, n, 0] = h_w * np.cos(n * r)
-        h[:, :, n, 1] = h_w * np.sin(n * r)
+        if n == 0:
+            h[:, :, n] = h_w
+        else:
+            h[:, :, 2 * n - 1] = h_w * np.cos(n * r)
+            h[:, :, 2 * n] = h_w * np.sin(n * r)
+    h[np.isnan(h)] = 0
     return h
 
 
@@ -63,22 +70,10 @@ def apply_filter(im, f):
 
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
+    pass
 
-    shape = (256,256)
-    cutoff = 32
-    N = 6
 
-    h = scale_adaptive_spectrums(shape, cutoff, N)
 
-    for i in range(h.shape[2]):
-        h_all = np.linalg.norm(h[:,:,i,:], axis=-1)
-        pair = np.hstack((h[:,:,i,0], h[:,:,i,1], h_all))
-        # plt.matshow(pair)
-        # plt.show()
-        plt.plot(pair[0, :128])
-        plt.plot(pair[0, 256:256+128])
-        plt.show()
 
 
 
