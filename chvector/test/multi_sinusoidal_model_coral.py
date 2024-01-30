@@ -140,7 +140,7 @@ if __name__ == '__main__':
     print("Weights are: ")
     print(weightV.transpose())
     # CH vector output array
-    ch = np.zeros(ch_shape, dtype=np.complex)
+    ch = np.zeros(ch_shape, dtype=complex)
     # Calculate
     for i, w in enumerate(wavelengths):
         print("Calculating CH vector for wavelength {}".format(w))
@@ -188,10 +188,10 @@ if __name__ == '__main__':
     phi_model_2 = np.zeros(model_shape)
     theta_model_2 = np.zeros(model_shape)
     # CH vector of model
-    ch_model = np.zeros(ch_shape, dtype=np.complex)
-    ch_residual = np.zeros(ch_shape, dtype=np.complex)
-    ch_model_2 = np.zeros(ch_shape, dtype=np.complex)
-    ch_residual_2 = np.zeros(ch_shape, dtype=np.complex)
+    ch_model = np.zeros(ch_shape, dtype=complex)
+    ch_residual = np.zeros(ch_shape, dtype=complex)
+    ch_model_2 = np.zeros(ch_shape, dtype=complex)
+    ch_residual_2 = np.zeros(ch_shape, dtype=complex)
     # Calculate
     for i, ch_channel in enumerate(ch):
         s, th, ch_model[i], ch_residual[i], poly, delt, lamb = solve_model(ch_channel, U, 2)

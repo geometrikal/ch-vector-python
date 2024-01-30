@@ -11,7 +11,7 @@ from chvector.transforms.chv import img_chv
 
 def complex_to_real(matrix, dim):
     matrix_0 = np.swapaxes(matrix, dim, 0)
-    res = np.zeros(matrix_0.shape, dtype=np.complex)
+    res = np.zeros(matrix_0.shape, dtype=complex)
     print(res.shape)
     N = (matrix_0.shape[0] - 1) // 2
     print(N)
@@ -28,7 +28,7 @@ def complex_to_real(matrix, dim):
 
 def real_to_complex(matrix, dim, is_chv=True):
     matrix_0 = np.swapaxes(matrix, dim, 0)
-    res = np.zeros(matrix_0.shape, dtype=np.complex)
+    res = np.zeros(matrix_0.shape, dtype=complex)
     N = (matrix_0.shape[0] - 1) // 2
     for i in range(N + 1):
         if i == 0:
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     h = scale_adaptive_spectrums(shape, cutoff, M)
 
 
-    shm = np.zeros(shape + (2 * M + 1, 2 * N + 1), dtype=np.complex)
+    shm = np.zeros(shape + (2 * M + 1, 2 * N + 1), dtype=complex)
 
     for i in tqdm(range(h.shape[2])):
         # h_all = np.linalg.norm(h[:, :, i, :], axis=-1)

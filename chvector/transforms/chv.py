@@ -79,7 +79,7 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     # If multi-channel, run on each channel
     if np.ndim(im) > 2:
         if im.shape[2] > 1:
-            r = np.zeros(im.shape + (2*N+1,), dtype=np.complex128)
+            r = np.zeros(im.shape + (2*N+1,), dtype=complex)
             for i in range(im.shape[2]):
                 r[..., i, :] = img_chv(im[..., i], basis_filter_spectrum, N, weights)
             return r
@@ -95,7 +95,7 @@ def img_chv(im, basis_filter_spectrum, N, weights='sinusoid', is_fft=None):
     f *= basis_filter_spectrum
 
     # CHV placeholder to store results
-    ch = np.zeros(f.shape + (2*N+1,), dtype=np.complex128)
+    ch = np.zeros(f.shape + (2*N+1,), dtype=complex)
 
     # Calculate each order
     for n in range(-N, N+1):

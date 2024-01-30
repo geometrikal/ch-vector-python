@@ -16,7 +16,7 @@ def phase_congruency(im, N, w, sigma, scales, scale_factor=2, model=None, model_
     plt.show()
     if np.ndim(im) > 2:
         im = skc.rgb2gray(im)
-    ch = np.zeros(im.shape + (2*N+1, scales), dtype=np.complex)
+    ch = np.zeros(im.shape + (2*N+1, scales), dtype=complex)
 
     for i in range(scales):
         spectrum = log_gabor_spectrum(im.shape[:2], w * scale_factor**i, sigma, passband='band')

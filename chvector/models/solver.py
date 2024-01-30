@@ -15,9 +15,9 @@ def create_poly(chv, U):
     :return: Response polynomial in theta
     """
     Uplus = np.linalg.pinv(U.transpose())
-    poly = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2] * 2 - 1), dtype=np.complex)
-    delt = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2]), dtype=np.complex)
-    lamb = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2]), dtype=np.complex)
+    poly = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2] * 2 - 1), dtype=complex)
+    delt = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2]), dtype=complex)
+    lamb = np.zeros((U.shape[0], chv.shape[0], chv.shape[1], chv.shape[2]), dtype=complex)
 
     # Iterate over model parts
     for m in range(U.shape[0]):
@@ -36,7 +36,7 @@ def create_poly(chv, U):
 
 def conv_3rd_dim(A, B, parallel=True):
     if parallel is False:
-        res = np.zeros((A.shape[0], A.shape[1], A.shape[2] * 2 - 1), dtype=np.complex)
+        res = np.zeros((A.shape[0], A.shape[1], A.shape[2] * 2 - 1), dtype=complex)
         print("Convolve along 3rd dimension...")
         for i in range(A.shape[0]):
             print("\r - row {} / {}".format(i + 1, A.shape[0]), end="")
@@ -60,7 +60,7 @@ def conv_3rd_dim(A, B, parallel=True):
 def func_conv_3rd_dim_parallel(M):
     A = M[:, :, :, 0]
     B = M[:, :, :, 1]
-    res = np.zeros((A.shape[0], A.shape[1], A.shape[2] * 2 - 1), dtype=np.complex)
+    res = np.zeros((A.shape[0], A.shape[1], A.shape[2] * 2 - 1), dtype=complex)
     for i in range(A.shape[0]):
         for j in range(A.shape[1]):
             v1 = A[i, j, :].flatten()
@@ -95,7 +95,7 @@ def poly_roots_parallel(A):
 
 
 def poly_value(p, theta, isreal=True):
-    v = np.zeros((p.shape[0], p.shape[1], theta.shape[2]), dtype=np.complex)
+    v = np.zeros((p.shape[0], p.shape[1], theta.shape[2]), dtype=complex)
     N = p.shape[2] // 2
     for i in range(theta.shape[2]):
         k = np.arange(-N, N + 1)
@@ -154,7 +154,7 @@ def solve_model(ch, U, order):
     for i, m in enumerate(lamb):
         s[i] = poly_value(lamb[i], th_max)[:, :, 0]
     # Model components
-    ch_model = np.zeros(ch.shape, dtype=np.complex)
+    ch_model = np.zeros(ch.shape, dtype=complex)
     for i, m in enumerate(s):
         ch_model += poly_make(U[i], m, th_max)
     # Residual

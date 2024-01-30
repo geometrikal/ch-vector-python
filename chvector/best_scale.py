@@ -7,7 +7,7 @@ import skimage.color as skc
 def scale(im, N, w, sigma, scales, scale_factor=2):
     if np.ndim(im) > 2:
         im = skc.rgb2gray(im)
-    ch = np.zeros(im.shape + (2 * N + 1, scales), dtype=np.complex)
+    ch = np.zeros(im.shape + (2 * N + 1, scales), dtype=complex)
 
     A = []
     for i in range(scales):

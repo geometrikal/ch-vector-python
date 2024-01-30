@@ -99,7 +99,7 @@ if __name__ == '__main__':
     print("Weights are: ")
     print(wv.transpose())
     # CH vector output array
-    ch = np.zeros(im.shape + (2 * N + 1, len(wavelengths)), dtype=np.complex)
+    ch = np.zeros(im.shape + (2 * N + 1, len(wavelengths)), dtype=complex)
     # Calculate
     for i, w in enumerate(wavelengths):
         print("Calculating CH vector for wavelength {}".format(w))
