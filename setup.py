@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='chvector',
-    version='1.0.1',
+    version='1.0.2',
     packages=['chvector', 'chvector.test', 'chvector.utils', 'chvector.models', 'chvector.transforms'],
     url='',
     license='',
