@@ -2,8 +2,6 @@ import chvector.transforms.ops as ops
 import numpy as np
 from scipy.fftpack import fft2, ifft2, ifftshift
 
-from chvector.transforms.chv import img_chv
-
 
 def fft_mesh(shape):
     rows = shape[0]
